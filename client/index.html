@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Nexus 竞品分析专家 - 基于大语言模型的竞争情报分析工具">
+    <title>Nexus 竞品分析专家</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <!-- Markdown Renderer -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">⬡</div>
+                <div class="logo-text">
+                    <span class="logo-name">Nexus</span>
+                    <span class="logo-tagline">竞品情报分析专家</span>
+                </div>
+            </div>
+            <div class="header-status" id="modelStatus">
+                <span class="status-dot inactive"></span>
+                <span class="status-text">未选择模型</span>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-section="analyze">🎯 开始分析</button>
+                <button class="nav-btn" data-section="history">📋 历史报告</button>
+                <button class="nav-btn" data-section="models">⚙️ 模型管理</button>
+                <button class="nav-btn" data-section="about">💡 使用指南</button>
+            </nav>
+        </header>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-icon">C</div><span>领域锁定</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="2">
+                    <div class="step-icon">O</div><span>目标输入</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="3">
+                    <div class="step-icon">M</div><span>情报采集</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="4">
+                    <div class="step-icon">P</div><span>深度分析</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="5">
+                    <div class="step-icon">E</div><span>洞察萃取</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="6">
+                    <div class="step-icon">T</div><span>报告输出</span>
+                </div>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <!-- Step 1: Domain Selection -->
+            <section class="step-panel active" id="step1">
+                <div class="panel-glass">
+                    <div class="panel-header">
+                        <h2>🚀 STEP 1：选择分析领域</h2>
+                        <p>请选择您要分析的行业领域</p>
+                    </div>
+                    <div class="domain-grid">
+                        <div class="domain-card" data-domain="finance">
+                            <div class="domain-icon">🏦</div>
+                            <h3>金融科技</h3>
+                            <p>银行、保险、支付、投资理财、区块链</p>
+                            <div class="domain-tags"><span class="tag">合规风险</span><span class="tag">用户信任度</span></div>
+                        </div>
+                        <div class="domain-card" data-domain="healthcare">
+                            <div class="domain-icon">🏥</div>
+                            <h3>医疗健康</h3>
+                            <p>医药、医疗器械、数字健康、医院管理</p>
+                            <div class="domain-tags"><span class="tag">临床有效性</span><span class="tag">监管审批</span></div>
+                        </div>
+                        <div class="domain-card" data-domain="education">
+                            <div class="domain-icon">📚</div>
+                            <h3>教育科技</h3>
+                            <p>K12、职业教育、在线学习、企业培训</p>
+                            <div class="domain-tags"><span class="tag">学习效果</span><span class="tag">用户留存</span></div>
+                        </div>
+                        <div class="domain-card" data-domain="legal">
+                            <div class="domain-icon">⚖️</div>
+                            <h3>法律服务</h3>
+                            <p>法律科技、合规管理、知识产权、合同管理</p>
+                            <div class="domain-tags"><span class="tag">合规覆盖</span><span class="tag">AI准确性</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Objective Input -->
+            <section class="step-panel" id="step2">
+                <div class="panel-glass">
+                    <div class="panel-header">
+                        <h2>📥 STEP 2：定义分析目标</h2>
+                        <p>请提供分析所需的关键信息</p>
+                    </div>
+                    <form class="objective-form" id="objectiveForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>🎯 竞品名称 <span class="required">*</span></label>
+                                <div class="tags-input-container">
+                                    <div class="tags-list" id="competitorTags"></div>
+                                    <div class="input-with-btn">
+                                        <input type="text" class="form-input" id="competitorInput"
+                                            placeholder="输入竞品名称后点击添加或按回车">
+                                        <button type="button" class="btn btn-add" id="addCompetitorBtn">+ 添加</button>
+                                    </div>
+                                    <span class="form-hint">最多添加 5 个竞品</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>🏢 您的公司/产品</label>
+                                <input type="text" class="form-input" id="companyName" placeholder="输入您所在公司或产品名称">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>🎪 分析目的 <span class="required">*</span></label>
+                                <div class="purpose-options">
+                                    <label class="radio-card"><input type="radio" name="purpose" value="market_entry">
+                                        <div class="radio-content">🚀 市场进入</div>
+                                    </label>
+                                    <label class="radio-card"><input type="radio" name="purpose" value="defense">
+                                        <div class="radio-content">🛡️ 竞争防御</div>
+                                    </label>
+                                    <label class="radio-card"><input type="radio" name="purpose" value="optimization">
+                                        <div class="radio-content">⚡ 产品优化</div>
+                                    </label>
+                                    <label class="radio-card"><input type="radio" name="purpose" value="investment">
+                                        <div class="radio-content">💰 投资研究</div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>🌍 分析地区</label>
+                                <select class="form-select" id="region">
+                                    <option value="china">中国大陆</option>
+                                    <option value="global">全球市场</option>
+                                    <option value="asia">亚太地区</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>📊 报告格式</label>
+                                <select class="form-select" id="reportFormat">
+                                    <option value="standard">标准版（5-8页）</option>
+                                    <option value="summary">摘要版（1页）</option>
+                                    <option value="detailed">深度版（15页+）</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>📝 补充说明</label>
+                                <textarea class="form-textarea" id="additionalInfo" rows="3"
+                                    placeholder="描述您的具体需求..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="panel-actions">
+                        <button class="btn btn-secondary" id="backToStep1">← 返回</button>
+                        <button class="btn btn-primary" id="startAnalysis">🔍 开始分析 →</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3-5: Analysis Processing -->
+            <section class="step-panel" id="step3">
+                <div class="panel-glass">
+                    <div class="analysis-header">
+                        <div class="analysis-status">
+                            <div class="status-spinner"></div><span id="analysisStatusText">正在调用大模型进行分析...</span>
+                        </div>
+                        <div class="analysis-meta"><span id="selectedDomain">领域：金融科技</span><span
+                                id="competitorCount">竞品：3个</span></div>
+                    </div>
+                    <div class="analysis-stages">
+                        <div class="stage active" id="stage-mine">
+                            <div class="stage-icon">🔍</div>
+                            <div class="stage-content">
+                                <h4>情报采集</h4>
+                                <p class="stage-desc">正在准备分析请求...</p>
+                                <div class="stage-progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stage" id="stage-probe">
+                            <div class="stage-icon">📊</div>
+                            <div class="stage-content">
+                                <h4>大模型分析</h4>
+                                <p class="stage-desc">等待模型响应...</p>
+                                <div class="stage-progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stage" id="stage-extract">
+                            <div class="stage-icon">⭐</div>
+                            <div class="stage-content">
+                                <h4>报告生成</h4>
+                                <p class="stage-desc">等待分析完成...</p>
+                                <div class="stage-progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="analysis-logs">
+                        <div class="logs-header"><span>📋 分析日志</span></div>
+                        <div class="logs-container" id="analysisLogs"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 6: Report Output -->
+            <section class="step-panel" id="step6">
+                <div class="panel-glass report-panel">
+                    <div class="report-header">
+                        <h2>📊 竞品分析报告</h2>
+                        <div class="report-meta" id="reportMeta"></div>
+                        <div class="report-actions">
+                            <button class="btn btn-outline" id="exportPdf">📄 导出 PDF</button>
+                            <button class="btn btn-outline" id="copyReport">📋 复制内容</button>
+                            <button class="btn btn-primary" id="newAnalysis">🔄 新建分析</button>
+                        </div>
+                    </div>
+                    <div class="report-content markdown-body" id="reportContent"></div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="section-panel" id="historySection" style="display: none;">
+                <div class="panel-glass">
+                    <div class="panel-header">
+                        <h2>📋 历史分析报告</h2>
+                        <button class="btn btn-outline" id="refreshHistory">🔄 刷新</button>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>暂无历史报告</h3>
+                            <p>开始您的第一次竞品分析吧！</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Models Section -->
+            <section class="section-panel" id="modelsSection" style="display: none;">
+                <div class="panel-glass">
+                    <div class="panel-header">
+                        <h2>⚙️ 模型管理</h2>
+                        <p>配置和管理 AI 模型连接（支持 OpenAI 协议、Ollama、LM Studio）</p>
+                    </div>
+                    <div class="models-container">
+                        <div class="models-list" id="modelsList"></div>
+                        <div class="model-form-container">
+                            <h3>➕ 添加新模型</h3>
+                            <form id="addModelForm" class="model-form">
+                                <div class="form-group">
+                                    <label>模型名称</label>
+                                    <input type="text" class="form-input" name="name" placeholder="例如：我的 Ollama"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label>提供商</label>
+                                    <select class="form-select" name="provider" id="newModelProvider">
+                                        <option value="ollama">Ollama</option>
+                                        <option value="lmstudio">LM Studio</option>
+                                        <option value="openai">OpenAI</option>
+                                        <option value="custom">自定义 (OpenAI 兼容)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>API 地址</label>
+                                    <input type="text" class="form-input" name="baseUrl" id="newModelBaseUrl"
+                                        placeholder="http://localhost:11434/v1">
+                                </div>
+                                <div class="form-group">
+                                    <label>API Key</label>
+                                    <input type="text" class="form-input" name="apiKey" placeholder="如果不需要可留空">
+                                </div>
+                                <div class="form-group">
+                                    <label>模型名称</label>
+                                    <input type="text" class="form-input" name="model" placeholder="例如：qwen2.5:7b">
+                                </div>
+                                <button type="submit" class="btn btn-primary">添加模型</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section class="section-panel" id="aboutSection" style="display: none;">
+                <div class="panel-glass">
+                    <div class="panel-header">
+                        <h2>💡 使用指南</h2>
+                        <p>了解如何使用 Nexus 竞品分析专家</p>
+                    </div>
+                    <div class="guide-content">
+                        <div class="guide-section">
+                            <h3>🚀 快速开始</h3>
+                            <ol>
+                                <li><strong>配置模型</strong>：首先在「模型管理」中配置 AI 模型（支持 Ollama、LM Studio 或 OpenAI）</li>
+                                <li><strong>选择领域</strong>：在分析界面选择您的行业领域</li>
+                                <li><strong>输入竞品</strong>：添加需要分析的竞品名称</li>
+                                <li><strong>开始分析</strong>：AI 将自动生成专业的竞品分析报告</li>
+                                <li><strong>导出报告</strong>：支持导出 PDF 或复制 Markdown 内容</li>
+                            </ol>
+                        </div>
+                        <div class="guide-section">
+                            <h3>🤖 支持的模型</h3>
+                            <div class="model-providers">
+                                <div class="provider-card">
+                                    <h4>🦙 Ollama</h4>
+                                    <p>本地运行，默认端口 11434</p>
+                                    <code>http://localhost:11434/v1</code>
+                                </div>
+                                <div class="provider-card">
+                                    <h4>🖥️ LM Studio</h4>
+                                    <p>本地运行，默认端口 1234</p>
+                                    <code>http://localhost:1234/v1</code>
+                                </div>
+                                <div class="provider-card">
+                                    <h4>🌐 OpenAI</h4>
+                                    <p>需要 API Key</p>
+                                    <code>https://api.openai.com/v1</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="guide-section">
+                            <h3>📊 COMPETE 分析协议</h3>
+                            <div class="compete-breakdown">
+                                <div class="compete-item"><span class="compete-letter">C</span>
+                                    <div><strong>Context</strong> - 领域锁定</div>
+                                </div>
+                                <div class="compete-item"><span class="compete-letter">O</span>
+                                    <div><strong>Objective</strong> - 目标输入</div>
+                                </div>
+                                <div class="compete-item"><span class="compete-letter">M</span>
+                                    <div><strong>Mine</strong> - 情报采集</div>
+                                </div>
+                                <div class="compete-item"><span class="compete-letter">P</span>
+                                    <div><strong>Probe</strong> - 深度分析</div>
+                                </div>
+                                <div class="compete-item"><span class="compete-letter">E</span>
+                                    <div><strong>Extract</strong> - 洞察萃取</div>
+                                </div>
+                                <div class="compete-item"><span class="compete-letter">T</span>
+                                    <div><strong>Emit</strong> - 报告输出</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Model Test Modal -->
+            <div class="modal" id="modelTestModal" style="display: none;">
+                <div class="modal-overlay"></div>
+                <div class="modal-content panel-glass" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h2 id="testModalTitle">🤖 模型对话测试</h2>
+                        <button class="modal-close" id="closeTestModal">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="chat-container" id="testChatContainer">
+                            <div class="chat-placeholder">
+                                <div class="empty-icon">💬</div>
+                                <p>发送消息以开始测试连接和响应...</p>
+                            </div>
+                        </div>
+                        <div class="chat-input-area">
+                            <textarea class="form-textarea" id="testChatInput" rows="2"
+                                placeholder="输入测试内容，按 Enter 发送..."></textarea>
+                            <button class="btn btn-primary" id="sendTestMsgBtn">发送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Detail Modal -->
+            <div class="modal" id="reportModal" style="display: none;">
+                <div class="modal-overlay"></div>
+                <div class="modal-content panel-glass">
+                    <div class="modal-header">
+                        <h2 id="modalTitle">报告详情</h2>
+                        <button class="modal-close" id="closeModal">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="report-meta" id="modalReportMeta"></div>
+                        <div class="report-content markdown-body" id="modalReportContent"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" id="modalExportPdf">📄 导出 PDF</button>
+                        <button class="btn btn-outline" id="modalCopyReport">📋 复制内容</button>
+                        <button class="btn btn-danger" id="modalDeleteReport">🗑️ 删除报告</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer"><span>Nexus 印记：洞察铸就胜势</span><span>v1.0.0</span></footer>
+    </div>
+    <div class="toast-container" id="toastContainer"></div>
+    <script type="module" src="./app.js"></script>
+</body>
+
+</html>
